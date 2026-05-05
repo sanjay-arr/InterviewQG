@@ -31,6 +31,11 @@ public class RecommendationController {
         return recommendationService.getRecommendationsByUserId(userId);
     }
 
+    @GetMapping("/generate/{userId}")
+    public List<Recommendation> generateRecommendations(@PathVariable Long userId) {
+        return recommendationService.generateUserRecommendations(userId);
+    }
+
     @PostMapping
     public Recommendation createRecommendation(@RequestBody Recommendation recommendation) {
         return recommendationService.saveRecommendation(recommendation);

@@ -16,9 +16,9 @@ public class UserProgress {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long progressId;
-    private Integer currentlevel;
-    private Double accuracy;
-    private Integer totalAttempts;
+    private Integer currentlevel = 1;
+    private Double accuracy = 0.0;
+    private Integer totalAttempts = 0;
 
     @ManyToOne
     @JoinColumn(name="user_id")

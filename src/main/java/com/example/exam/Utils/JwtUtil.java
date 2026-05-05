@@ -1,45 +1,36 @@
 package com.example.exam.Utils;
 
-import java.nio.charset.StandardCharsets;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 
-import org.springframework.stereotype.Component;
-
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-
 @Component
 public class JwtUtil {
-    private final String SECRET="Code io - Tamil, like share and subseirvhdt,fshfdh,dhjf,fh";
-    private final long EXPIRATION = 1000*60;
-    private final Key secretKey=Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+    private final String SECRET_KEY = "your-very-secure-and-very-long-secret-key-for-jwt-signing";
+    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private final long expirationTime = 1000 * 60 * 60 * 10;
 
-    public String generateToken(String email){
+    public String generateToken(String email) {
         return Jwts.builder()
-        .setSubject(email)
-        .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis()+EXPIRATION))
-        .signWith(secretKey,SignatureAlgorithm.HS256)
-        .compact();
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(key)
+                .compact();
     }
 
-    public String extractEmail(String token){
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+    public String extractEmail(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build()
+                .parseClaimsJws(token).getBody().getSubject();
     }
 
-    public boolean validateJwtToken(String token){
-        try{
-            extractEmail(token);
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        }catch(JwtException exception){
+        } catch (Exception e) {
             return false;
         }
     }

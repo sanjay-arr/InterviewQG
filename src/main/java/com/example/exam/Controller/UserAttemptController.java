@@ -32,8 +32,12 @@ public class UserAttemptController {
     }
 
     @PostMapping
-    public UserAttempt createAttempt(@RequestBody UserAttempt userAttempt) {
-        return userAttemptService.saveAttempt(userAttempt);
+    public ResponseEntity<?> createAttempt(@RequestBody UserAttempt userAttempt) {
+        try {
+            return ResponseEntity.ok(userAttemptService.saveAttempt(userAttempt));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")

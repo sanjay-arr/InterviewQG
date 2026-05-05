@@ -31,6 +31,15 @@ public class QuestionController {
         return questionService.getQuestionsByTopicId(topicId);
     }
 
+    @GetMapping("/adaptive/{userId}/{topicId}")
+    public ResponseEntity<Question> getAdaptiveQuestion(@PathVariable Long userId, @PathVariable Long topicId) {
+        try {
+            return ResponseEntity.ok(questionService.getAdaptiveQuestion(userId, topicId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping
     public Question createQuestion(@RequestBody Question question) {
         return questionService.saveQuestion(question);
@@ -53,4 +62,4 @@ public class QuestionController {
         questionService.deleteQuestion(id);
         return ResponseEntity.noContent().build();
     }
-}
+}
